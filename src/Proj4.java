@@ -28,6 +28,71 @@ public class Proj4 {
         inputFileNameScanner.nextLine();
 
         // FINISH ME
+        ArrayList<String> data = new ArrayList<>();
 
+        int count = 0;
+        while (inputFileNameScanner.hasNextLine() && count < numLines) {
+            String line = inputFileNameScanner.nextLine().trim();
+            if (!line.isEmpty()) {
+                data.add(line);
+                count++;
+            }
+        }
+
+        inputFileNameScanner.close();
+
+        ArrayList<String> sorted = new ArrayList<>(data);
+        Collections.sort(sorted);
+
+        ArrayList<String> shuffled = new ArrayList<>(data);
+        Collections.shuffle(shuffled);
+
+        ArrayList<String> reversed = new ArrayList<>(data);
+        Collections.sort(reversed, Collections.reverseOrder());
+
+        FileOutputStream fos = new FileOutputStream("analysis.txt", true);
+        java.io.PrintWriter out = new java.io.PrintWriter(fos);
+
+        testCase("sorted", sorted, out);
+        testCase("shuffled", shuffled, out);
+        testCase("reversed", reversed, out);
+
+        out.close();
+        System.out.println("Done. Results appended to analysis.txt.");
+    }
+
+    private static void testCase(String label, ArrayList<String> arr, java.io.PrintWriter out) {
+
+        SeparateChainingHashTable<String> table = new SeparateChainingHashTable<>();
+
+        long startInsert = System.nanoTime();
+        for (int i = 0; i < arr.size(); i++) {
+            table.insert(arr.get(i));
+        }
+        long endInsert = System.nanoTime();
+
+        long startSearch = System.nanoTime();
+        for (int i = 0; i < arr.size(); i++) {
+            table.contains(arr.get(i));
+        }
+        long endSearch = System.nanoTime();
+
+        long startDelete = System.nanoTime();
+        for (int i = 0; i < arr.size(); i++) {
+            table.remove(arr.get(i));
+        }
+        long endDelete = System.nanoTime();
+
+        long insertTime = endInsert - startInsert;
+        long searchTime = endSearch - startSearch;
+        long deleteTime = endDelete - startDelete;
+
+        System.out.println(label + " | insert: " + insertTime +
+                " | search: " + searchTime +
+                " | delete: " + deleteTime);
+
+        out.println(label + "," + insertTime + "," + searchTime + "," + deleteTime);
     }
 }
+
+
