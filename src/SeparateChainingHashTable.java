@@ -1,3 +1,11 @@
+// **********************************************************************
+// File: SeparateChainingHashTable.java
+// Purpose: Core hash table structure using separate chaining.
+//          Provides insert, contains, remove, and resizing logic.
+// Author: Wesley Stroebel
+// Date: December 3, 2025
+// **********************************************************************
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,10 +26,12 @@ public class SeparateChainingHashTable<AnyType> {
     private List<AnyType>[] theLists;
     private int currentSize;
 
+    // Constructor: creates a table with default size
     public SeparateChainingHashTable() {
         this(DEFAULT_TABLE_SIZE);
     }
 
+    // Constructor: creates a table with the next prime size >= given size
     public SeparateChainingHashTable(int size) {
         theLists = new LinkedList[nextPrime(size)];
         for (int i = 0; i < theLists.length; i++) {
@@ -29,6 +39,7 @@ public class SeparateChainingHashTable<AnyType> {
         }
     }
 
+    // Inserts x into the hash table if it is not already present
     public void insert(AnyType x) {
         List<AnyType> whichList = theLists[myhash(x)];
 
@@ -37,11 +48,12 @@ public class SeparateChainingHashTable<AnyType> {
             currentSize++;
 
             if (currentSize > theLists.length) {
-                rehash();
+                rehash(); // expand table when load factor gets too high
             }
         }
     }
 
+    // Removes x from the hash table if it exists
     public void remove(AnyType x) {
         List<AnyType> whichList = theLists[myhash(x)];
         if (whichList.remove(x)) {
@@ -49,11 +61,13 @@ public class SeparateChainingHashTable<AnyType> {
         }
     }
 
+    // Returns true if x is stored in the hash table
     public boolean contains(AnyType x) {
         List<AnyType> whichList = theLists[myhash(x)];
         return whichList.contains(x);
     }
 
+    // Clears the entire hash table
     public void makeEmpty() {
         for (int i = 0; i < theLists.length; i++) {
             theLists[i].clear();
@@ -61,6 +75,7 @@ public class SeparateChainingHashTable<AnyType> {
         currentSize = 0;
     }
 
+    // Rebuilds and resizes the hash table to reduce collisions
     private void rehash() {
         List<AnyType>[] oldLists = theLists;
 
@@ -78,6 +93,7 @@ public class SeparateChainingHashTable<AnyType> {
         }
     }
 
+    // Computes the hash index for x
     private int myhash(AnyType x) {
         int hashVal = x.hashCode();
         hashVal %= theLists.length;
@@ -89,6 +105,7 @@ public class SeparateChainingHashTable<AnyType> {
         return hashVal;
     }
 
+    // Hash function for strings using polynomial rolling hash
     public static int hash(String key, int tableSize) {
         int hashVal = 0;
 
@@ -105,6 +122,7 @@ public class SeparateChainingHashTable<AnyType> {
         return hashVal;
     }
 
+    // Returns the next prime number >= n
     private static int nextPrime(int n) {
         if (n % 2 == 0) {
             n++;
@@ -117,6 +135,7 @@ public class SeparateChainingHashTable<AnyType> {
         return n;
     }
 
+    // Checks if n is prime
     private static boolean isPrime(int n) {
         if (n == 2 || n == 3) {
             return true;

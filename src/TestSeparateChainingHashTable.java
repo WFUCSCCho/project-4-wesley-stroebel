@@ -1,3 +1,11 @@
+// **********************************************************************
+// File: TestSeparateChainingHashTable.java
+// Purpose: Test suite for the separate chaining hash table.
+//          Executes functional tests across core operations.
+// Author: Wesley Stroebel
+// Date: December 3, 2025
+// **********************************************************************
+
 public class TestSeparateChainingHashTable {
     public static void main( String [ ] args ) {
         SeparateChainingHashTable<Integer> H = new SeparateChainingHashTable<>( );
